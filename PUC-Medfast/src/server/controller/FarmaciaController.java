@@ -36,7 +36,6 @@ public class FarmaciaController {
 
     public String listarPedidosPendentes() {
         if (farmaciaLogada == null) {
-            System.out.println("Farmácia não autenticada!");
             return "Farmácia não autenticada!";
         } else {
             StringBuilder sb = new StringBuilder("=== Meus Pedidos ===\n");
@@ -50,9 +49,19 @@ public class FarmaciaController {
     public void entregarPedido(int pedidoId) {
         if (farmaciaLogada == null) {
             System.out.println("Farmácia não autenticada!");
+        }
+
+        Optional<Pedido> pedidoOpt = pedidoService.listarPedidoPorId(pedidoId);
+        if (pedidoOpt.isPresent()) {
+            Pedido pedido = pedidoOpt.get();
+            if (pedido.getStatus() == StatusPedidoEnum.CONFIRMADA) {
+                pedidoService.atualizarStatusPedido(pedidoId, StatusPedidoEnum.ENTREGUE);
+                System.out.println("Pedido marcado como entregue!");
+            } else {
+                System.out.println("O pedido ainda não foi confirmado ou já foi entregue!");
+            }
         } else {
-            pedidoService.atualizarStatusPedido(pedidoId, StatusPedidoEnum.ENTREGUE);
-            System.out.println("Pedido marcado como entregue!");
+            System.out.println("Pedido não encontrado!");
         }
     }
 

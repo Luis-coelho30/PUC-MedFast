@@ -28,7 +28,7 @@ public class Usuario {
         return "Usuario{" +
                 "nome='" + nome + '\'' +
                 ", login='" + login + '\'' +
-                '}';
+                "}\n";
     }
 
 }

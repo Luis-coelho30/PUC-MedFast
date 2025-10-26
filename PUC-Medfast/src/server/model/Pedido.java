@@ -72,6 +72,6 @@ public class Pedido {
                 ", Lista de remedios = " + listaDeRemedios +
                 ", Preco total = " + getValorTotal() +
                 ", status = " + status +
-                '}';
+                "}\n";
     }
 }

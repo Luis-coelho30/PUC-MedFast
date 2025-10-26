@@ -74,7 +74,16 @@ public class Farmacia {
         return catalogo;
     }
 
-    public void setCatalogo(List<Remedio> catalogo) {
-        this.catalogo = catalogo;
+    public void adicionarRemedio(Remedio remedio) {
+        this.catalogo.add(remedio);
+    }
+
+    @Override
+    public String toString() {
+        return "Farmacia{" +
+                "nome='" + nome + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", catalogo=" + catalogo +
+                "}\n";
     }
 }

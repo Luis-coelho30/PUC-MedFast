@@ -82,7 +82,7 @@ public class Server {
 
         boolean executando = true;
         while (executando) {
-            out.println("\n=== PUC-MedFast Cliente ===");
+            out.println("=== PUC-MedFast Cliente ===");
             out.println("1. Criar novo pedido");
             out.println("2. Listar meus pedidos");
             out.println("3. Sair");
@@ -150,7 +150,7 @@ public class Server {
 
         boolean executando = true;
         while (executando) {
-            out.println("\n=== Menu da Farmácia ===");
+            out.println("=== Menu da Farmácia ===");
             out.println("1. Listar pedidos pendentes");
             out.println("2. Confirmar pedido");
             out.println("3. Marcar pedido como entregue");

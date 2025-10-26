@@ -51,6 +51,6 @@ public class Remedio {
 
     @Override
     public String toString() {
-        return nome + " (R$" + preco + ", estoque: " + estoque + ")";
+        return nome + " (R$" + preco + ", estoque: " + estoque + ")\n";
     }
 }
