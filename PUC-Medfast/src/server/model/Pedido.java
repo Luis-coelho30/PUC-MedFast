@@ -6,22 +6,29 @@ import java.util.List;
 
 public class Pedido {
 
+    private static int contador = 1;
+    private final int pedidoId;
     private Usuario usuario;
     private Farmacia farmacia;
     private List<Remedio> listaDeRemedios;
     private StatusPedidoEnum status;
 
-    public Pedido(Usuario usuario, Farmacia farmacia, List<Remedio> listaDeRemedios, StatusPedidoEnum status) {
+    public Pedido(Usuario usuario, Farmacia farmacia, List<Remedio> listaDeRemedios) {
+        this.pedidoId = contador++;
         this.usuario = usuario;
         this.farmacia = farmacia;
         this.listaDeRemedios = listaDeRemedios;
-        this.status = status;
+        this.status = StatusPedidoEnum.PENDENTE;
     }
 
-    public double getvValorTotal() {
+    public double getValorTotal() {
         return listaDeRemedios.stream()
                 .mapToDouble(Remedio::getPreco)
                 .sum();
+    }
+
+    public int getPedidoId() {
+        return this.pedidoId;
     }
 
     public Usuario getUsuario() {
@@ -59,10 +66,11 @@ public class Pedido {
     @Override
     public String toString() {
         return "Pedido{" +
-                "usuario = " + usuario +
+                "id = " + pedidoId +
+                ", usuario = " + usuario +
                 ", farmacia = " + farmacia +
                 ", Lista de remedios = " + listaDeRemedios +
-                ", Preco total = " + getvValorTotal() +
+                ", Preco total = " + getValorTotal() +
                 ", status = " + status +
                 '}';
     }
