@@ -1,7 +1,7 @@
 package server.controller;
 
+import server.model.Pedido;
 import server.model.Usuario;
-import server.model.Farmacia;
 import server.model.Remedio;
 import server.service.AuthService;
 import server.service.PedidoService;
@@ -31,21 +31,25 @@ public class UsuarioController {
         return false;
     }
 
-    public void criarPedido(Farmacia farmacia, List<Remedio> remedios) {
+    public void criarPedido(String nomeFarmacia, String enderecoFarmacia, List<Remedio> remedios) {
         if (this.usuarioLogado == null) {
             System.out.println("Usuário não autenticado!");
         } else {
-            pedidoService.criarPedido(this.usuarioLogado, farmacia, remedios);
-            System.out.println("Pedido criado com sucesso!");
+            if (pedidoService.criarPedido(this.usuarioLogado, nomeFarmacia, enderecoFarmacia, remedios)) {
+                System.out.println("Pedido criado com sucesso!");
+            }
         }
     }
 
-    public void listarMeusPedidos() {
+    public String listarMeusPedidos() {
         if (this.usuarioLogado == null) {
-            System.out.println("Usuário não autenticado!");
+            return "Usuário não autenticado!";
         } else {
-            List<?> pedidos = pedidoService.listarPedidosPorUsuario(this.usuarioLogado.getNome(), this.usuarioLogado.getLogin());
-            pedidos.forEach(System.out::println);
+            StringBuilder sb = new StringBuilder("=== Meus Pedidos ===\n");
+            for (Pedido p : pedidoService.listarPedidosPorUsuario(usuarioLogado.getNome(), usuarioLogado.getLogin())) {
+                sb.append(p).append("\n");
+            }
+            return sb.toString();
         }
     }
 }

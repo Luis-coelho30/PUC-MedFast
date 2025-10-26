@@ -1,5 +1,5 @@
 package server.types;
 
 public enum StatusPedidoEnum {
-    PENDENTE, CONFIRMADA, ENTREGUE
+    PENDENTE, CONFIRMADA, ENTREGUE, CANCELADO
 }

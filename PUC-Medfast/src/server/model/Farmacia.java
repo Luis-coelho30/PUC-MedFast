@@ -34,8 +34,21 @@ public class Farmacia {
                 .findFirst()
                 .orElse(null);
 
-        if(remedio != null) {
+        if(remedio != null && remedio.getEstoque() >= quantidade) {
             return remedio.diminuirEstoque(quantidade);
+        }
+
+        return -1;
+    }
+
+    public double getPrecoRemedioByName(String nomeRemedio) {
+        Remedio remedio = catalogo.stream()
+                .filter(r -> r.getNome().equalsIgnoreCase(nomeRemedio))
+                .findFirst()
+                .orElse(null);
+
+        if(remedio != null) {
+            return remedio.getPreco();
         }
 
         return -1;

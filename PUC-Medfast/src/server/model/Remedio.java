@@ -12,6 +12,11 @@ public class Remedio {
         this.estoque = estoque;
     }
 
+    public Remedio(String nome, int estoque) {
+        this.nome = nome;
+        this.estoque = estoque;
+    }
+
     public int aumentarEstoque(int quantidade) {
         return estoque += quantidade;
     }

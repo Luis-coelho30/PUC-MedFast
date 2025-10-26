@@ -18,15 +18,10 @@ public class FarmaciaRepository {
         return farmaciaRepository;
     }
 
-    public Optional<Farmacia> findByName(String name) {
+    public Optional<Farmacia> findByNameAndAddress(String name, String address) {
         return farmaciaRepository.stream()
-                .filter(f -> f.getNome().equalsIgnoreCase(name))
-                .findFirst();
-    }
-
-    public Optional<Farmacia> findByAddress(String address) {
-        return farmaciaRepository.stream()
-                .filter(f -> f.getEndereco().equalsIgnoreCase(address))
+                .filter(f -> f.getNome().equalsIgnoreCase(name) &&
+                        f.getEndereco().equalsIgnoreCase(address))
                 .findFirst();
     }
 
