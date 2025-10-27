@@ -7,17 +7,20 @@ import server.service.AuthService;
 import server.service.PedidoService;
 import server.types.StatusPedidoEnum;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class FarmaciaController {
 
+    private final PrintWriter out;
     private final AuthService authService;
     private final PedidoService pedidoService;
     private Farmacia farmaciaLogada;
 
-    public FarmaciaController(AuthService authService, PedidoService pedidoService) {
+    public FarmaciaController(PrintWriter out, AuthService authService, PedidoService pedidoService) {
+        this.out = out;
         this.authService = authService;
         this.pedidoService = pedidoService;
     }
@@ -26,29 +29,29 @@ public class FarmaciaController {
         Farmacia f = authService.autenticarFarmacia(nomeFarmacia, enderecoFarmacia);
         if (f != null) {
             farmaciaLogada = f;
-            System.out.println("Login da farmácia bem-sucedido!");
+            out.println("Login da farmácia bem-sucedido!");
             return true;
         }
 
-        System.out.println("Farmácia não encontrada!");
+        out.println("Farmácia não encontrada!");
         return false;
     }
 
-    public String listarPedidosPendentes() {
+    public void listarPedidosPendentes() {
         if (farmaciaLogada == null) {
-            return "Farmácia não autenticada!";
+            out.println("Farmácia não autenticada!");
         } else {
             StringBuilder sb = new StringBuilder("=== Meus Pedidos ===\n");
             for (Pedido p : pedidoService.listarPedidosPorFarmacia(farmaciaLogada.getNome(), farmaciaLogada.getEndereco())) {
                 sb.append(p).append("\n");
             }
-            return sb.toString();
+            out.println(sb);
         }
     }
 
     public void entregarPedido(int pedidoId) {
         if (farmaciaLogada == null) {
-            System.out.println("Farmácia não autenticada!");
+            out.println("Farmácia não autenticada!");
         }
 
         Optional<Pedido> pedidoOpt = pedidoService.listarPedidoPorId(pedidoId);
@@ -56,25 +59,25 @@ public class FarmaciaController {
             Pedido pedido = pedidoOpt.get();
             if (pedido.getStatus() == StatusPedidoEnum.CONFIRMADA) {
                 pedidoService.atualizarStatusPedido(pedidoId, StatusPedidoEnum.ENTREGUE);
-                System.out.println("Pedido marcado como entregue!");
+                out.println("Pedido marcado como entregue!");
             } else {
-                System.out.println("O pedido ainda não foi confirmado ou já foi entregue!");
+                out.println("O pedido ainda não foi confirmado ou já foi entregue!");
             }
         } else {
-            System.out.println("Pedido não encontrado!");
+            out.println("Pedido não encontrado!");
         }
     }
 
-    public boolean processarPedido(int pedidoId) {
+    public void processarPedido(int pedidoId) {
         if (farmaciaLogada == null) {
-            System.out.println("Farmácia não autenticada!");
-            return false;
+            out.println("Farmácia não autenticada!");
+            return;
         }
 
         Optional<Pedido> pedidoOpt = pedidoService.listarPedidoPorId(pedidoId);
         if (pedidoOpt.isEmpty()) {
-            System.out.println("Pedido não encontrado");
-            return false;
+            out.println("Pedido não encontrado");
+            return;
         }
 
         Pedido pedido = pedidoOpt.get();
@@ -87,19 +90,19 @@ public class FarmaciaController {
                 r.setPreco(farmacia.getPrecoRemedioByName(r.getNome())); //Adiciona o preco do remedio pela farmacia
                 remediosDisponiveis.add(r); //Adiciona o remedio na lista de disponiveis
             } else {
-                System.out.println("Remédio " + r.getNome() + " não está disponível!");
+                out.println("Remédio " + r.getNome() + " não está disponível!");
             }
         }
 
         if (remediosDisponiveis.isEmpty()) {
-            System.out.println("Nenhum remédio disponível, pedido cancelado.");
+            out.println("Nenhum remédio disponível, pedido cancelado.");
             pedidoService.atualizarStatusPedido(pedidoId, StatusPedidoEnum.CANCELADO);
-            return false;
+            return;
         }
 
         pedido.setListaDeRemedios(remediosDisponiveis);
         pedidoService.atualizarStatusPedido(pedidoId, StatusPedidoEnum.CONFIRMADA);
 
-        return true;
+        out.println("Pedido concluído");
     }
 }

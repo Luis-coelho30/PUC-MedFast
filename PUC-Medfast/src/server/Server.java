@@ -52,10 +52,10 @@ public class Server {
             String tipoCliente = in.readLine().trim().toUpperCase();
 
             if (tipoCliente.equals("USUARIO")) {
-                UsuarioController uc = new UsuarioController(authService, pedidoService);
+                UsuarioController uc = new UsuarioController(out, authService, pedidoService);
                 handleUsuario(uc, in, out);
             } else if (tipoCliente.equals("FARMACIA")) {
-                FarmaciaController fc = new FarmaciaController(authService, pedidoService);
+                FarmaciaController fc = new FarmaciaController(out, authService, pedidoService);
                 handleFarmacia(fc, in, out);
             } else {
                 out.println("Tipo de cliente inválido!");
@@ -74,11 +74,8 @@ public class Server {
         String senha = in.readLine();
 
         if (!uc.login(login, senha)) {
-            out.println("Falha no login!");
             return;
         }
-
-        out.println("Login bem-sucedido!\n");
 
         boolean executando = true;
         while (executando) {
@@ -122,9 +119,8 @@ public class Server {
                     String endereco = in.readLine();
 
                     uc.criarPedido(farmacia, endereco, remedios);
-                    out.println("Pedido criado com sucesso");
                 }
-                case "2" -> out.println(uc.listarMeusPedidos());
+                case "2" -> uc.listarMeusPedidos();
                 case "3" -> {
                     out.println("Saindo do menu do usuário...");
                     executando = false;
@@ -142,11 +138,8 @@ public class Server {
         String endereco = in.readLine();
 
         if (!fc.login(nome, endereco)) {
-            out.println("Falha no login da farmácia!");
             return;
         }
-
-        out.println("Login bem-sucedido!\n");
 
         boolean executando = true;
         while (executando) {
@@ -164,21 +157,16 @@ public class Server {
             }
 
             switch (opcao) {
-                case "1" -> out.println(fc.listarPedidosPendentes());
+                case "1" -> fc.listarPedidosPendentes();
                 case "2" -> {
                     out.println("Digite o ID do pedido para confirmar:");
                     int id = Integer.parseInt(in.readLine());
-                    if(fc.processarPedido(id)) {
-                        out.println("Pedido confirmado!");
-                    } else {
-                        out.println("Pedido não pôde ser concluído");
-                    }
+                    fc.processarPedido(id);
                 }
                 case "3" -> {
                     out.println("Digite o ID do pedido para marcar como entregue:");
                     int id = Integer.parseInt(in.readLine());
                     fc.entregarPedido(id);
-                    out.println("Pedido marcado como entregue!");
                 }
                 case "4" -> {
                     out.println("Saindo do menu da farmácia...");

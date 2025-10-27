@@ -66,12 +66,12 @@ public class Pedido {
     @Override
     public String toString() {
         return "Pedido{" +
-                "id = " + pedidoId +
-                ", usuario = " + usuario +
-                ", farmacia = " + farmacia +
-                ", Lista de remedios = " + listaDeRemedios +
-                ", Preco total = " + getValorTotal() +
-                ", status = " + status +
+                "\nid = " + pedidoId +
+                "\nusuario = " + usuario.getNome() +
+                "\nfarmacia = " + farmacia.getNome() +
+                "\nLista de remedios = " + listaDeRemedios +
+                "\nPreco total = " + getValorTotal() +
+                "\nstatus = " + status +
                 "}\n";
     }
 }
